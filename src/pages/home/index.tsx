@@ -1,16 +1,10 @@
-import { useAuth } from '@/context/AuthContext';
-import { fetchUser } from '@/utils/service';
-import { useQuery } from '@tanstack/react-query';
+import { fetchUser } from "@/utils/service";
+import { useQuery } from "@tanstack/react-query";
 
 function Home() {
-  const { authState } = useAuth();
-  const user = authState?.user;
-
-  // Fetch user data using React Query
   const { data, isLoading, error } = useQuery({
-    queryKey: ['user'],
+    queryKey: ["user"],
     queryFn: fetchUser,
-    enabled: !!user,
   });
 
   if (isLoading) return <p className="text-center text-gray-600">Loading...</p>;

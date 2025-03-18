@@ -1,40 +1,41 @@
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useAuth } from '@/context/AuthContext';
-import { cn } from '@/lib/utils';
-import { login } from '@/utils/service';
-import { loginSchema } from '@/utils/validator';
-import { useMutation } from '@tanstack/react-query';
-import { ErrorMessage, Field, Form, Formik } from 'formik';
-import { Link, useNavigate } from 'react-router-dom';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useAuth } from "@/context/AuthContext";
+import { cn } from "@/lib/utils";
+import { login } from "@/utils/service";
+import { loginSchema } from "@/utils/validator";
+import { useMutation } from "@tanstack/react-query";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import { Link, useNavigate } from "react-router-dom";
 
 export function LoginForm({
   className,
   ...props
-}: React.ComponentProps<'div'>) {
+}: React.ComponentProps<"div">) {
   const navigate = useNavigate();
   const { login: setAuthState } = useAuth();
   const mutation = useMutation({
     mutationFn: login,
     onSuccess: (data: any) => {
-      navigate('/');
+      navigate("/");
       setAuthState(data.data);
+      localStorage.setItem("authData", JSON.stringify(data.data));
     },
     onError: (error) => {
-      console.error('Login failed', error);
+      console.error("Login failed", error);
     },
   });
 
   return (
-    <div className={cn('flex flex-col gap-5', className)} {...props}>
+    <div className={cn("flex flex-col gap-5", className)} {...props}>
       <Card className="overflow-hidden">
         <CardContent className="grid p-0 md:grid-cols-2">
           <Formik
             initialValues={{
-              email: '',
-              password: '',
+              email: "",
+              password: "",
             }}
             validationSchema={loginSchema}
             onSubmit={(values, { setSubmitting }) => {
@@ -97,11 +98,11 @@ export function LoginForm({
                     className="w-full"
                     disabled={isSubmitting || mutation.isLoading}
                   >
-                    {mutation.isLoading ? 'Logging in...' : 'Login'}
+                    {mutation.isLoading ? "Logging in..." : "Login"}
                   </Button>
                 </div>
                 <div className="text-center text-sm mt-3">
-                  Don&apos;t have an account?{' '}
+                  Don&apos;t have an account?{" "}
                   <Link
                     to="/auth/register"
                     className="underline underline-offset-4"

@@ -1,12 +1,13 @@
-import { useAuth } from '@/context/AuthContext';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from "react-router-dom";
 
 export default function ProtectedRoute() {
-  const { authState } = useAuth();
+  const storedAuthData = localStorage.getItem("authData");
 
-  if (!authState?.user) {
-    return <Navigate to="/" replace />;
+  const authData = storedAuthData ? JSON.parse(storedAuthData) : null;
+
+  if (!authData || !authData.email) {
+    return <Navigate to="/" />;
   }
 
-  return <Outlet />; // Render the child routes if authenticated
+  return <Outlet />;
 }
