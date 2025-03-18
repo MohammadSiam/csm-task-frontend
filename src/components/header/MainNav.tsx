@@ -1,15 +1,24 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-} from '@/components/ui/navigation-menu';
-import { useAuth } from '@/context/AuthContext';
-import { Link } from 'react-router-dom';
+} from "@/components/ui/navigation-menu";
+import { useAuth } from "@/context/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function MainNav() {
-  const { authState, logout } = useAuth(); // Access auth state and logout function
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  const storedAuthData = localStorage.getItem("authData");
+
+  const authData = storedAuthData ? JSON.parse(storedAuthData) : null;
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
     <div className="container mx-auto">
@@ -24,20 +33,14 @@ export default function MainNav() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
-              <Link className="text-[20px]" to="/about">
-                About
+              <Link className="text-[20px]" to="/content">
+                Content
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink asChild>
-              <Link className="text-[20px]" to="/services">
-                Services
-              </Link>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
+
           <NavigationMenuItem className="ml-auto">
-            {authState.isAuthenticated ? (
+            {authData && authData.email ? (
               <>
                 <div className="flex items-center">
                   <NavigationMenuLink asChild>
@@ -45,7 +48,7 @@ export default function MainNav() {
                       Profile
                     </Link>
                   </NavigationMenuLink>
-                  <Button onClick={logout} variant="outline">
+                  <Button onClick={handleLogout} variant="outline">
                     Logout
                   </Button>
                 </div>

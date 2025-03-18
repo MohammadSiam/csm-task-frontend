@@ -1,15 +1,20 @@
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useAuth } from '@/context/AuthContext';
-import { updateProfile } from '@/utils/service';
-import { ProfileSchema } from '@/utils/validator';
-import { useMutation } from '@tanstack/react-query';
-import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik';
-import { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useAuth } from "@/context/AuthContext";
+import { updateProfile } from "@/utils/service";
+import { ProfileSchema } from "@/utils/validator";
+import { useMutation } from "@tanstack/react-query";
+import { ErrorMessage, Field, FieldArray, Form, Formik } from "formik";
+import { useState } from "react";
 
 export default function ProfilePage() {
   const { authState } = useAuth();
+
+  const storedAuthData = localStorage.getItem("authData");
+
+  const authData = storedAuthData ? JSON.parse(storedAuthData) : null;
+
   const [isEditing, setIsEditing] = useState(false);
 
   const mutation = useMutation({
@@ -21,11 +26,11 @@ export default function ProfilePage() {
       profileData: any;
     }) => updateProfile(userId, profileData),
     onSuccess: () => {
-      alert('Update successful!');
+      alert("Update successful!");
       setIsEditing(false);
     },
     onError: (error: any) =>
-      alert(error.response?.data?.message || 'Something went wrong!'),
+      alert(error.response?.data?.message || "Something went wrong!"),
   });
 
   return (
@@ -35,10 +40,10 @@ export default function ProfilePage() {
       </h2>
       <Formik
         initialValues={{
-          firstName: authState?.user?.firstName || '',
-          lastName: authState?.user?.lastName || '',
-          email: authState?.user?.email || '',
-          content: authState?.user?.content || [''],
+          firstName: (authData && authData?.firstName) || "",
+          lastName: (authData && authData?.lastName) || "",
+          email: (authData && authData?.email) || "",
+          content: (authData && authData?.content) || [""],
         }}
         validationSchema={ProfileSchema}
         onSubmit={(values) => {
@@ -126,7 +131,7 @@ export default function ProfilePage() {
                         <Button
                           type="button"
                           variant="outline"
-                          onClick={() => push('')}
+                          onClick={() => push("")}
                         >
                           Add Another Link
                         </Button>
@@ -141,7 +146,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="flex gap-2">
                   <Button type="submit" disabled={mutation.isLoading}>
-                    {mutation.isLoading ? 'Saving...' : 'Save Changes'}
+                    {mutation.isLoading ? "Saving..." : "Save Changes"}
                   </Button>
                   <Button
                     variant="outline"

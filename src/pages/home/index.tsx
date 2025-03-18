@@ -1,5 +1,13 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { fetchUser } from "@/utils/service";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 function Home() {
   const { data, isLoading, error } = useQuery({
@@ -7,9 +15,15 @@ function Home() {
     queryFn: fetchUser,
   });
 
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+
   if (isLoading) return <p className="text-center text-gray-600">Loading...</p>;
   if (error)
     return <p className="text-center text-red-500">Error loading user data</p>;
+
+  const openModal = (user: any) => {
+    setSelectedUser(user);
+  };
 
   return (
     <div className="container mx-auto p-6">
@@ -32,6 +46,36 @@ function Home() {
                 </p>
                 <p className="text-sm text-gray-600">Email: {user.email}</p>
               </div>
+
+              {/* View Profile Button */}
+              <Dialog>
+                <DialogTrigger
+                  asChild
+                  onClick={() => openModal(user)} // Set selected user
+                >
+                  <button className="mt-4 px-4 py-2 text-white bg-blue-600 rounded-md cursor-pointer hover:bg-blue-700 transition-all">
+                    View Profile
+                  </button>
+                </DialogTrigger>
+
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>User Profile Information Details</DialogTitle>
+                  </DialogHeader>
+
+                  <div className="mt-4 space-y-2">
+                    <p className="text-lg text-gray-800">
+                      <strong>First Name:</strong> {selectedUser?.firstName}
+                    </p>
+                    <p className="text-lg text-gray-800">
+                      <strong>Last Name:</strong> {selectedUser?.lastName}
+                    </p>
+                    <p className="text-lg text-gray-800">
+                      <strong>Email:</strong> {selectedUser?.email}
+                    </p>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </li>
           ))}
         </ul>

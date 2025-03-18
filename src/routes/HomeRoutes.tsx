@@ -1,11 +1,12 @@
-import HomeLayout from '@/layouts/HomeLayout';
-import Home from '@/pages/home';
-import Profile from '@/pages/profile';
-import { RouteObject } from 'react-router-dom';
-import ProtectedRoute from './ProtectedRoutes';
+import HomeLayout from "@/layouts/HomeLayout";
+import Content from "@/pages/content";
+import Home from "@/pages/home";
+import Profile from "@/pages/profile";
+import { RouteObject } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoutes";
 
 const HomeRoutes: RouteObject = {
-  path: '/',
+  path: "/",
   element: <HomeLayout />,
   children: [
     {
@@ -13,7 +14,11 @@ const HomeRoutes: RouteObject = {
       element: <Home />,
     },
     {
-      path: 'profile',
+      path: "content",
+      element: <Content />,
+    },
+    {
+      path: "profile",
       element: <ProtectedRoute />,
       children: [
         {

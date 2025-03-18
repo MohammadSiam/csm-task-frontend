@@ -1,5 +1,5 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
-import { IAuthContext, IAuthState, IUser } from '../@types/auth';
+import { createContext, ReactNode, useContext, useState } from "react";
+import { IAuthContext, IAuthState, IUser } from "../@types/auth";
 
 const AuthContext = createContext<IAuthContext | undefined>(undefined);
 
@@ -15,6 +15,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     setAuthState({ user: null, isAuthenticated: false });
+    localStorage.removeItem("authData");
   };
 
   return (
@@ -26,7 +27,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within AuthProvider');
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
 };
 
